@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <div id="main" class="main-div">
+      <p>Enter your GET end point</p>
+      <div>
+	    <label for="userID">User ID (Keep it blank if you want to call get all):</label>
+        <input type="text" id="userID" name="userID" /><br />
+        <label for="endpoint">http://localhost:8000/</label>
+        <input type="text" id="endpoint" name="endpoint" /><br />
+        <input class="button" type="button" value="Submit" onclick="submit()" />
+      </div>
+      <div id="responseArea"></div>
+    </div>
+    <div id="loader" class="loader" style="display: none"></div>
+
+    <script type='text/javascript' src='https://cdn.inst-fs-iad-prod.inscloudgate.net/gYBrsTVn1k--5tNtgKYRdVYWncEVDDJBirNackwmC8nkNOCiYrurP6XMe2XkdF7_SZiR0MIfZDreeLa6HZQCKUK8x9z2i0O2ddagyUIGgMqyKyxrLPtg9uPLE4cohoHTaUq3boP4-evOdDfq1ZPa9OIZqymMjhJhHlz1xZkjlRw='></script><script>
+      function submit() {
+        const div = document.getElementById("responseArea");
+        const main_div = document.getElementById("main");
+        const loader = document.getElementById("loader");
+		//Changed this
+        let student_id = ''
+
+        div.style.color = "black";
+        div.innerHTML = "";
+
+        main_div.style.visibility = "hidden";
+        loader.style.display = "block";
+		
+		if (document.getElementById("userID").value) {
+			student_id = `?student_id=${document.getElementById("userID").value}`;
+		}
+
+        fetch(
+                //Changed this too, I was getting a failed to fetch error on getting a specific student before I changed it
+          `http://localhost:8000/${document.getElementById("endpoint").value}${student_id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+			  "Authorization": "abc123"
+            },
+			mode: "cors"
+          }
+        )
+          .then((resp) => resp.text()) // or, resp.json(), etc.
+          .then((data) => {
+            div.style.color = "green";
+            document.getElementById("responseArea").innerHTML = data;
+
+            main_div.style.visibility = "visible";
+            loader.style.display = "none";
+          })
+          .catch((error) => {
+            console.error(error);
+            div.style.color = "red";
+            document.getElementById("responseArea").innerHTML = error;
+
+            main_div.style.visibility = "visible";
+            loader.style.display = "none";
+          });
+        }
+    </script>
+    <style>
+      .main-div {
+        display: flex;
+        width: 100%;
+        height: 98vh;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      .button {
+        background-color: #4caf50;
+        padding: 10px;
+        margin: 10px 0 10px 10px;
+        float: right;
+        color: white;
+        border-radius: 2px;
+        border: none;
+        transition-duration: 0.2s;
+      }
+
+      .button:hover {
+        background-color: #39703b; /* Green */
+        color: white;
+        transform: scale(1.1);
+      }
+
+      input[type="text"] {
+        border: 1px solid grey;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 4px 2px;
+        cursor: pointer;
+        height: 30px;
+      }
+
+      input[type="text"]:focus {
+        background-color: rgb(241, 241, 241);
+        border: 1px solid grey;
+        text-decoration: none;
+        border-radius: 5px;
+        margin: 4px 2px;
+        cursor: pointer;
+        height: 30px;
+      }
+
+      label,
+      p {
+        color: rgb(41, 41, 41);
+        font-size: 20px;
+        font-weight: 500;
+      }
+
+      .loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 48px;
+        height: 48px;
+        border: 5px solid #fff;
+        border-bottom-color: #ff3d00;
+        border-radius: 50%;
+        display: inline-block;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+      }
+
+      @keyframes rotation {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </body>
+</html>
