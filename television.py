@@ -55,7 +55,9 @@ class Television:
                 self.__volume -= 1
 
     def __str__(self) -> str:
-        """Returns a string representation of the television and its current power, channel, and volume"""
+        """Returns a string representation of the television and its current power, channel, and volume
+        :return: This returns the TV status
+        """
         if self.__muted:
             return f"Power = {self.__status}, Channel = {self.__channel}, Volume = {self.MIN_VOLUME}"
         return f"Power = {self.__status}, Channel = {self.__channel}, Volume = {self.__volume}"
